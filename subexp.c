@@ -99,6 +99,12 @@ AST_Node SubExp_toAST(SubExp s)
     }
 }
 
+void SubExp_replace_vars(SubExp s, Env e)
+{
+    if ((s == NULL) || (e == NULL)) return;
+    AST_replace_vars(s->head, e);
+}
+
 bool SubExp_is_singleton(SubExp s)
 {
     return ((s == NULL) || (s->rest == NULL)) ? true : false;

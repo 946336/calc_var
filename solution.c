@@ -38,7 +38,7 @@ void  AST_replace_vars(AST_Node root, Env e);
 // Will print runtime errors for any variables it sees.
 // Check integrity of AST structure
 bool  AST_validate(AST_Node root);
-Type  AST_typeof(AST_Node root, Env e);
+Type  AST_typeof(AST_Node root, Env e, bool show_errors);
 Value AST_eval(AST_Node root);
 
 AST_Node AST_rightmost(AST_Node root);
@@ -189,7 +189,9 @@ SubExp SubExp_pop(SubExp s);
 SubExp SubExp_add(SubExp s, Value v);
 
 SubExp SubExp_collapse(SubExp s);
+
 AST_Node SubExp_toAST(SubExp s);
+void     SubExp_replace_vars(SubExp s, Env e);
 
 bool SubExp_is_singleton(SubExp s);
 
@@ -596,7 +598,7 @@ bool AST_validate(AST_Node root)
     return true;
 }
 
-Type AST_typeof(AST_Node root, Env e)
+Type AST_typeof(AST_Node root, Env e, bool show_errors)
 {
     if (root == NULL) {
         return NONE;
@@ -620,24 +622,26 @@ Type AST_typeof(AST_Node root, Env e)
             break;
         case OP:
             if (root->v.u.op != PAREN) {
-                lhs.type = AST_typeof(root->left, e);
-                rhs.type = AST_typeof(root->right, e);
+                lhs.type = AST_typeof(root->left, e, show_errors);
+                rhs.type = AST_typeof(root->right, e, show_errors);
 
                 if (lhs.type != rhs.type) {
-                    fprintf(stderr, "%s [Line %d]: "
-                                    "Type mismatch: Operator [%c] cannot "
-                                    "operate on arguments of type [%s] and "
-                                    "[%s]\n", FILENAME, LINE_NUMBER,
-                                    OPERATORtochar(root->v.u.op),
-                                    typestring(lhs.type),
-                                    typestring(rhs.type));
+                    if (show_errors) {
+                        fprintf(stderr, "%s [Line %d]: "
+                                        "Type mismatch: Operator [%c] cannot "
+                                        "operate on arguments of type [%s] and "
+                                        "[%s]\n", FILENAME, LINE_NUMBER,
+                                        OPERATORtochar(root->v.u.op),
+                                        typestring(lhs.type),
+                                        typestring(rhs.type));
+                    }
                     return NONE;
                 }
                 if (root->v.u.op != SUM) {
                     return (lhs.type == NUMBER) ? NUMBER : NONE;
                 } else return lhs.type;
             } else {
-                return AST_typeof(root->right, e);
+                return AST_typeof(root->right, e, show_errors);
             }
     }
     return root->v.type;
@@ -952,12 +956,12 @@ int main(int argc, char **argv)
                                 FILENAME, LINE_NUMBER);
         }
     
-        Type t = AST_typeof(root, e);
+        Type t = AST_typeof(root, e, true);
         if (t != NONE) {
             if ((echo == YES) &&(verbosity == NORMAL)) {
-                AST_print(root);
+                if (root->v.type == OP) AST_print(root);
             } else if ((echo == YES) &&(verbosity == VERBOSE)) {
-                AST_print_verbose(root);
+                if (root->v.type == OP) AST_print_verbose(root);
             }
     
             Value result = AST_eval(root);
@@ -1176,12 +1180,18 @@ SubExp parse(char *line, Env e)
                             "bug! (parse)\n", FILENAME, LINE_NUMBER);
         }
     } else {
-        SubExp_free(&l);
         // General expression must follow
-        return expression(&line, token);
+        SubExp_free(&l);
+        l = expression(&line, token);
+        if ((token = next_token(&line)) != NULL) {
+            e = where_binding(&line, token,
+                Env_new_extension(e));
+            SubExp_replace_vars(l, e);
+            Env_free(&e);
+            free(token);
+        }
     }
 
-    // Compiler dummy
     return l;
 }
 
@@ -1214,6 +1224,7 @@ Value let_binding(char **line, Env e)
 
     if (has_additional_bindings) Env_free(&e);
 
+    AST_validate(root);
     Value final = AST_eval(root);
     AST_free(&root);
     e = Env_bind(e, name, final);
@@ -1241,7 +1252,7 @@ Env where_binding(char **line, char *token, Env e)
     token = next_token(line);
     SubExp s = expression(line, token);
     AST_Node root = SubExp_toAST(s);
-    Type isComplete = AST_typeof(root, e);
+    Type isComplete = AST_typeof(root, e, false);
 
     AST_replace_vars(root, e);
     if (isComplete != NONE) {
@@ -1446,6 +1457,12 @@ AST_Node SubExp_toAST(SubExp s)
     }
 }
 
+void SubExp_replace_vars(SubExp s, Env e)
+{
+    if ((s == NULL) || (e == NULL)) return;
+    AST_replace_vars(s->head, e);
+}
+
 bool SubExp_is_singleton(SubExp s)
 {
     return ((s == NULL) || (s->rest == NULL)) ? true : false;
@@ -1571,14 +1588,14 @@ char *combine_string(char *start, char *second)
 char *drop_leading_whitespace(char *str)
 {
     if (str == NULL) return NULL;
-    while (isspace(*str)) ++str;
+    while (isspace((int) *str)) ++str;
     return str;
 }
 
 char *find_next_whitespace(char *str)
 {
      if (str == NULL) return NULL;
-     while (!isspace(str)) ++str;
+     while (!isspace((int) *str)) ++str;
      return str;
 }
 

@@ -36,12 +36,18 @@ SubExp parse(char *line, Env e)
                             "bug! (parse)\n", FILENAME, LINE_NUMBER);
         }
     } else {
-        SubExp_free(&l);
         // General expression must follow
-        return expression(&line, token);
+        SubExp_free(&l);
+        l = expression(&line, token);
+        if ((token = next_token(&line)) != NULL) {
+            e = where_binding(&line, token,
+                Env_new_extension(e));
+            SubExp_replace_vars(l, e);
+            Env_free(&e);
+            free(token);
+        }
     }
 
-    // Compiler dummy
     return l;
 }
 

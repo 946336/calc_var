@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -std=c99 -O2 -g
+CFLAGS = -Wall -Wextra -pedantic -std=c99 -O0 -g
 
 LDFLAGS = -lm
 
@@ -38,4 +38,4 @@ solution:
 	$(CC) $(CFLAGS) -o $@ solution.c $(LDFLAGS)
 
 clean:
-	rm -f *.o test
+	rm -f *.o test solution
