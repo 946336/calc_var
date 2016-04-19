@@ -39,7 +39,7 @@ int main(int argc, char **argv)
             else if (strcmp(argv[i], "-v") == 0) verbosity = VERBOSE;
             else if (strcmp(argv[i], "--no-echo") == 0) echo = NO;
             else if (strcmp(argv[i], "-h") == 0) {
-                fprintf(stdout, "%s", HELPME);
+                fprintf(stdout, "%s\n", HELPME);
                 exit(EXIT_SUCCESS);
             }
             else break;
