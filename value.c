@@ -8,7 +8,7 @@
 
 /****************************************************************************/
 
-static const char *NONE_S =  "NONE";
+static const char *NONE_S =  "INVALID";
 static const char *NUMBER_S = "NUMBER";
 static const char *STRING_S = "STRING";
 static const char *VAR_S = "VARIABLE";

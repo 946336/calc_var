@@ -225,40 +225,10 @@ bool AST_validate(AST_Node root)
             fprintf(stderr, "%s [Line %d]: Runtime error: Name [%s] not "
                             "bound\n", FILENAME, LINE_NUMBER,
                             root->v.u.name);
-            if (root->left != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
-            if (root->right != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
             return true;
         case NUMBER:
-            if (root->left != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
-            if (root->right != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
             return (root->left == NULL) && (root->right == NULL);            
         case STRING:
-            if (root->left != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
-            if (root->right != NULL) {
-                fprintf(stderr, "%s [LINE %d]: Argh! You've found an "
-                                "interpreter bug! (AST_validate)\n",
-                                FILENAME, LINE_NUMBER);
-            }
             return (root->left == NULL) && (root->right == NULL);            
         case OP:
             if (root->v.u.op != PAREN) {
