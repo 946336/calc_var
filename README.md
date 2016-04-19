@@ -1,5 +1,5 @@
 # calc_var
-A simple calculator, like `calc`, but offers variables.
+A simple calculator, like [calc](https://github.com/946336/calc "The inferior version"), but offers variables.
 
 This simple calculator takes after `bc` but provides only a basic subset of `bc`'s capabilities.
 
