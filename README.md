@@ -3,6 +3,8 @@ A simple calculator, like [calc](https://github.com/946336/calc "The inferior ve
 
 This is a very simple calculator. You type in simple math and it spits out answers.
 
+I recommend [ledit](http://www.unix.com/man-page/debian/1/ledit/ "This was just the first man page I found. ledit is not a Debian-exclusive") if it's availale to make your life easier.
+
 You may or may not care about the following decisions I have made:
 <ul>
   <li>
@@ -76,7 +78,7 @@ String concatenation is accomplished via the `+` operator.
 
 ## Command Line
 ### Options
-`calc` can read from files. Provide the filename as the last option on the command line.
+`calc` can read from scripts. Provide the filename as the last option on the command line.
 
 Additionally, `calc` accepts a handful of command line options.
 
