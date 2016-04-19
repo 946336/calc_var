@@ -33,7 +33,7 @@ The variable `<Name_1>` is assigned the result of evaluating `<Expression_1>` an
 
 Intermediate variables can be introduced in the scope of another declaration. These variables are destroyed after `<Exp_1>` is evaluated. You can introduce multiple intermediate variables at once.
 
-Intermediate variables aren't reliably mutually recursive, but the following examples are correct and equivalent. More complex interdependencies will likely fail.
+Intermediate variables are be mutually recursive (Note: super extensive testing has not been done on this front), so the following examples are correct and equivalent.
 
     >>> let a = b + 0 where b = c and c = 5
     = 5
