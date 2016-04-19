@@ -1,7 +1,7 @@
 # calc_var
 A simple calculator, like [calc](https://github.com/946336/calc "The inferior version"), but offers variables.
 
-This simple calculator takes after `bc` but provides only a basic subset of `bc`'s capabilities.
+This is a very simple calculator. You type in simple math and it spits out answers.
 
 You may or may not care about the following decisions I have made:
 <ul>
