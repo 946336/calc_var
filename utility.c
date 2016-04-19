@@ -84,14 +84,14 @@ char *combine_string(char *start, char *second)
 char *drop_leading_whitespace(char *str)
 {
     if (str == NULL) return NULL;
-    while (isspace(*str)) ++str;
+    while (isspace((int) *str)) ++str;
     return str;
 }
 
 char *find_next_whitespace(char *str)
 {
      if (str == NULL) return NULL;
-     while (!isspace(str)) ++str;
+     while (!isspace((int) *str)) ++str;
      return str;
 }
 
