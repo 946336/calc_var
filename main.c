@@ -92,12 +92,12 @@ int main(int argc, char **argv)
                                 FILENAME, LINE_NUMBER);
         }
     
-        Type t = AST_typeof(root, e);
+        Type t = AST_typeof(root, e, true);
         if (t != NONE) {
             if ((echo == YES) &&(verbosity == NORMAL)) {
-                AST_print(root);
+                if (root->v.type == OP) AST_print(root);
             } else if ((echo == YES) &&(verbosity == VERBOSE)) {
-                AST_print_verbose(root);
+                if (root->v.type == OP) AST_print_verbose(root);
             }
     
             Value result = AST_eval(root);

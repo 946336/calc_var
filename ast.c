@@ -282,7 +282,7 @@ bool AST_validate(AST_Node root)
     return true;
 }
 
-Type AST_typeof(AST_Node root, Env e)
+Type AST_typeof(AST_Node root, Env e, bool show_errors)
 {
     if (root == NULL) {
         return NONE;
@@ -306,24 +306,26 @@ Type AST_typeof(AST_Node root, Env e)
             break;
         case OP:
             if (root->v.u.op != PAREN) {
-                lhs.type = AST_typeof(root->left, e);
-                rhs.type = AST_typeof(root->right, e);
+                lhs.type = AST_typeof(root->left, e, show_errors);
+                rhs.type = AST_typeof(root->right, e, show_errors);
 
                 if (lhs.type != rhs.type) {
-                    fprintf(stderr, "%s [Line %d]: "
-                                    "Type mismatch: Operator [%c] cannot "
-                                    "operate on arguments of type [%s] and "
-                                    "[%s]\n", FILENAME, LINE_NUMBER,
-                                    OPERATORtochar(root->v.u.op),
-                                    typestring(lhs.type),
-                                    typestring(rhs.type));
+                    if (show_errors) {
+                        fprintf(stderr, "%s [Line %d]: "
+                                        "Type mismatch: Operator [%c] cannot "
+                                        "operate on arguments of type [%s] and "
+                                        "[%s]\n", FILENAME, LINE_NUMBER,
+                                        OPERATORtochar(root->v.u.op),
+                                        typestring(lhs.type),
+                                        typestring(rhs.type));
+                    }
                     return NONE;
                 }
                 if (root->v.u.op != SUM) {
                     return (lhs.type == NUMBER) ? NUMBER : NONE;
                 } else return lhs.type;
             } else {
-                return AST_typeof(root->right, e);
+                return AST_typeof(root->right, e, show_errors);
             }
     }
     return root->v.type;

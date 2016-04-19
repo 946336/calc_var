@@ -38,7 +38,7 @@ void  AST_replace_vars(AST_Node root, Env e);
 // Will print runtime errors for any variables it sees.
 // Check integrity of AST structure
 bool  AST_validate(AST_Node root);
-Type  AST_typeof(AST_Node root, Env e);
+Type  AST_typeof(AST_Node root, Env e, bool show_errors);
 Value AST_eval(AST_Node root);
 
 AST_Node AST_rightmost(AST_Node root);

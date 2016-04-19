@@ -74,6 +74,7 @@ Value let_binding(char **line, Env e)
 
     if (has_additional_bindings) Env_free(&e);
 
+    AST_validate(root);
     Value final = AST_eval(root);
     AST_free(&root);
     e = Env_bind(e, name, final);
@@ -101,7 +102,7 @@ Env where_binding(char **line, char *token, Env e)
     token = next_token(line);
     SubExp s = expression(line, token);
     AST_Node root = SubExp_toAST(s);
-    Type isComplete = AST_typeof(root, e);
+    Type isComplete = AST_typeof(root, e, false);
 
     AST_replace_vars(root, e);
     if (isComplete != NONE) {
