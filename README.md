@@ -19,7 +19,10 @@ Use either the included makefile or `compile.sh` to compile. Note that `compile.
 ## Syntax
 
 ### Expressions
-Any complete mathematical expression (For example: `(2^5)|2` results in `5`)
+Any complete mathematical expression
+
+    >>> (2^5)|2
+    = 5
 
 ### Variables
 Variables declared in the following fashion:
