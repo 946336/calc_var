@@ -37,17 +37,29 @@ The variable `<Name_1>` is assigned the result of evaluating `<Expression_1>` an
 
 ### Intermediate Variables
     let <Name_1> = <Exp_1> where <Name_2> = <Exp_2> and <Name_3> = <Exp_3> where <Name_4> = <Exp_4>
+    <Exp_5> where <Name_6> = <Exp_6> and <Name_7> = <Exp_7> where <Name_8> = <Exp_8>
 
-Intermediate variables can be introduced in the scope of another declaration. These variables are destroyed after `<Exp_1>` is evaluated. You can introduce multiple intermediate variables at once.
+Intermediate variables can be introduced in the scope of another expression. These variables are destroyed after `<Exp_1>` is evaluated. You can introduce multiple intermediate variables at once.
 
-Intermediate variables are be mutually recursive (Note: super extensive testing has not been done on this front), so the following examples are correct and equivalent.
+Intermediate variables are be mutually recursive (Note: super extensive testing has not been done on this front), so the following examples are correct and equivalent. After either or both of these statements, `a` is correctly bound to the value `5`, and neither `b` nor `c` are bound as variables.
 
     >>> let a = b + 0 where b = c and c = 5
     = 5
     >>> let a = b + 0 where c = 5 and b = c
     = 5
+    >>> a
+    = 5
+    >>> b
+    ... [...] Runtime Error: Name [b] nout bound
 
-After either or both os these statements, `a` is correctly bound to the value `5`, and neither `b` nor `c` are bound as variables.
+Similarly, intermediate bindings in the scope of an expression do not persist.
+
+    >>> a where b = 5 and a = b
+    = 5
+    >>> a
+    ... [...] Runtime Error: Name [a] not bound
+    >>> b
+    ... [...] Runtime Error: Name [b] not bound
 
 ### Strings
 Strings exist and can be bound to variables. String literals are quoted with double quotes as in 
