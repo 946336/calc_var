@@ -75,6 +75,9 @@ Value let_binding(char **line, Env e)
     if (has_additional_bindings) Env_free(&e);
 
     AST_validate(root);
+
+    (void) AST_typeof(root, e, true);
+
     Value final = AST_eval(root);
     AST_free(&root);
     e = Env_bind(e, name, final);
