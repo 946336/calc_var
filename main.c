@@ -7,6 +7,7 @@
 
 #include "tokenize.h"
 #include "parse.h"
+#include "basis.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -64,6 +65,7 @@ int main(int argc, char **argv)
 /****************************************************************************/
 
     Env e = Env_new();
+    e = add_basis(e);
 
     char *line = NULL;
     size_t size = 0;

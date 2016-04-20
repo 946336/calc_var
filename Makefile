@@ -7,7 +7,7 @@ LDFLAGS = -lm
 NOLINK = -c
 
 calc: main.c utility.o binding.o value.o env.o ast.o operator.o subexp.o \
-		tokenize.o parse.o
+		tokenize.o parse.o basis.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 binding.o: binding.c binding.h utility.o
@@ -32,6 +32,9 @@ parse.o: parse.c parse.h value.o env.o tokenize.o
 	$(CC) $(CFLAGS) $(NOLINK) -o $@ $< $(LDFLAGS)
 
 env.o: env.c env.h value.o binding.o 
+	$(CC) $(CFLAGS) $(NOLINK) -o $@ $< $(LDFLAGS)
+
+bassis.o: basis.c basis.h value.o env.o
 	$(CC) $(CFLAGS) $(NOLINK) -o $@ $< $(LDFLAGS)
 
 solution: 
