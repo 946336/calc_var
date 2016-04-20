@@ -54,7 +54,7 @@ Intermediate variables are be mutually recursive (Note: super extensive testing 
     >>> a
     = 5
     >>> b
-    ... [...] Runtime Error: Name [b] nout bound
+    ... [...] Runtime Error: Name [b] not bound
 
 Similarly, intermediate bindings in the scope of an expression do not persist.
 
