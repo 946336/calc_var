@@ -30,7 +30,7 @@ Any complete mathematical expression
     >>> 2+(3+5)7
     = 58
     >>> 2+(3+5)8|2
-    = 24
+    = 26
 
 ### Variables
 Variables declared in the following fashion:
