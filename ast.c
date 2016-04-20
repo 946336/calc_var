@@ -267,11 +267,11 @@ Type AST_typeof(AST_Node root, Env e, bool show_errors)
         case VAR:
             lhs = Env_find(e, root->v.u.name);
             return ((root->left != NULL) || (root->right != NULL)) ?
-                NONE : lhs.type;
+                INVALID : lhs.type;
         case NUMBER: 
         case STRING:
             if ((root->left != NULL) || (root->right != NULL)) {
-                return NONE;
+                return INVALID;
             }
             break;
         case OP:
@@ -289,10 +289,10 @@ Type AST_typeof(AST_Node root, Env e, bool show_errors)
                                         typestring(lhs.type),
                                         typestring(rhs.type));
                     }
-                    return NONE;
+                    return INVALID;
                 }
                 if (root->v.u.op != SUM) {
-                    return (lhs.type == NUMBER) ? NUMBER : NONE;
+                    return (lhs.type == NUMBER) ? NUMBER : INVALID;
                 } else return lhs.type;
             } else {
                 return AST_typeof(root->right, e, show_errors);

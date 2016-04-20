@@ -3,7 +3,7 @@
 
 #include "operator.h"
 
-typedef enum Type {NONE = -1, NUMBER, STRING, VAR, OP} Type;
+typedef enum Type {INVALID = -2, NONE = -1, NUMBER, STRING, VAR, OP} Type;
 const char *typestring(Type t);
 
 typedef struct Value {

@@ -85,15 +85,15 @@ int main(int argc, char **argv)
         AST_Node root = SubExp_toAST(s);
         AST_replace_vars(root, e);
     
-        if ((root != NULL) && !AST_validate(root)) {
+        if ((verbosity != QUIET) && (root != NULL) && !AST_validate(root)) {
             if (verbosity == VERBOSE)
                 fprintf(stderr, "%s [Line %d]: "
                                 "Incomplete expression!\n",
                                 FILENAME, LINE_NUMBER);
         }
     
-        Type t = AST_typeof(root, e, true);
-        if (t != NONE) {
+        Type t = AST_typeof(root, e, (verbosity == QUIET) ? false : true);
+        if ((t != NONE) && (t != INVALID)) {
             if ((echo == YES) &&(verbosity == NORMAL)) {
                 if (root->v.type == OP) AST_print(root);
             } else if ((echo == YES) &&(verbosity == VERBOSE)) {
@@ -115,8 +115,12 @@ int main(int argc, char **argv)
                                     "bug: Impossible value");
             }
             Value_free(&result);
+        } else if (t == INVALID) {
+            if (verbosity != QUIET)
+                fprintf(stderr, "%s [Line %d]: Invalid expression\n",
+                                FILENAME, LINE_NUMBER);
         } else {
-            if (verbosity == VERBOSE)
+            if (verbosity != QUIET)
                 fprintf(stderr, "%s [Line %d]: Expression is not well-typed/"
                                 "well-formed\n", FILENAME, LINE_NUMBER);
         }

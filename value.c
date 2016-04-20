@@ -8,7 +8,8 @@
 
 /****************************************************************************/
 
-static const char *NONE_S =  "INVALID";
+static const char *INVALID_S = "INVALID";
+static const char *NONE_S =  "NONE";
 static const char *NUMBER_S = "NUMBER";
 static const char *STRING_S = "STRING";
 static const char *VAR_S = "VARIABLE";
@@ -17,11 +18,12 @@ static const char *OP_S = "OPERATOR";
 const char *typestring(Type t)
 {
     switch (t) {
-        case NONE: return NONE_S;
-        case NUMBER: return NUMBER_S;
-        case STRING: return STRING_S;
-        case VAR: return VAR_S;
-        case OP: return OP_S;
+        case NONE:       return NONE_S;
+        case INVALID:    return INVALID_S;
+        case NUMBER:     return NUMBER_S;
+        case STRING:     return STRING_S;
+        case VAR:        return VAR_S;
+        case OP:         return OP_S;
     }
     // Compiler dummy
     return NONE_S;
@@ -107,11 +109,12 @@ Value Value_combine(Value lhs, OPERATOR op, Value rhs)
 void Value_print(Value v)
 {
     switch (v.type) {
-        case NUMBER: fprintf(stdout, "[%g]", v.u.d); break;
-        case STRING: fprintf(stdout, "[%s]", v.u.s); break;
-        case VAR: fprintf(stdout, "[%s]", v.u.name); break;
-        case OP: fprintf(stdout, "[%c]", OPERATORtochar(v.u.op)); break;
-        case NONE: fprintf(stdout, "[NONE]");
+        case NUMBER:    fprintf(stdout, "[%g]", v.u.d); break;
+        case STRING:    fprintf(stdout, "[%s]", v.u.s); break;
+        case VAR:       fprintf(stdout, "[%s]", v.u.name); break;
+        case OP:        fprintf(stdout, "[%c]", OPERATORtochar(v.u.op)); break;
+        case NONE:      fprintf(stdout, "[%s]", NONE_S);
+        case INVALID:   fprintf(stdout, "[%s]", INVALID_S);
     }
 }
 
