@@ -45,7 +45,7 @@ SubExp parse(char *line, Env e)
             SubExp_replace_vars(l, e);
             Env_free(&e);
             free(token);
-        }
+        } else free(token);
     }
 
     return l;

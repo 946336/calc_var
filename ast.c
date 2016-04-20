@@ -107,7 +107,7 @@ AST_Node AST_insertoperator(AST_Node n, AST_Node root)
             n->left = root->right;
             root->right = n;
         } else {
-            return AST_insertoperator(n, root->right);
+            AST_insertoperator(n, root->right);
         }
     } else {
         n->left = root;
@@ -138,7 +138,10 @@ void AST_print_r(AST_Node root)
             fprintf(stdout, "%.15g ", root->v.u.d);
             break;
         case STRING:
-            fprintf(stdout, "\"%s\" ", root->v.u.s);
+            fputc('\"', stdout);
+            print_string(root->v.u.s, stdout);
+            fputc('\"', stdout);
+            fputc('\n', stdout);
             break;
         case OP:
             if (root->v.u.op != PAREN) {
@@ -180,7 +183,10 @@ void AST_print_verbose_r_(AST_Node root)
             fprintf(stdout, "%.15g", root->v.u.d);
             break;
         case STRING:
-            fprintf(stdout, "\"%s\"", root->v.u.s);
+            fputc('\"', stdout);
+            print_string(root->v.u.s, stdout);
+            fputc('\"', stdout);
+            fputc('\n', stdout);
             break;
         case OP:
             if (root->v.u.op != PAREN) {
