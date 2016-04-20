@@ -21,6 +21,8 @@ char *copy_nstring(const char *str, size_t len);
 // This one requires that first and second be null terminated
 char *combine_string(char *first, char *second);
 
+void print_string(char *str, FILE *fp);
+
 char *drop_leading_whitespace(char *str);
 char *find_next_whitespace(char *str);
 

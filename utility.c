@@ -81,6 +81,18 @@ char *combine_string(char *start, char *second)
     return buf;
 }
 
+void print_string(char *str, FILE *fp)
+{
+    if (str == NULL) return;
+    for (char *walk = str; *walk != '\0'; ++walk) {
+        if (*walk != '\\') {
+            fputc(*walk, fp);
+        } else if (*(walk + 1) == '\\') {
+            fputc('\\', fp);
+        }
+    }
+}
+
 char *drop_leading_whitespace(char *str)
 {
     if (str == NULL) return NULL;

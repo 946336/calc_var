@@ -106,7 +106,10 @@ int main(int argc, char **argv)
                     fprintf(stdout, "= %.15g\n", result.u.d);
                     break;
                 case STRING:
-                    fprintf(stdout, "= \"%s\"\n", result.u.s);
+                    fputc('\"', stdout);
+                    print_string(result.u.s, stdout);
+                    fputc('\"', stdout);
+                    fputc('\n', stdout);
                     break;
                 default:
                     break;

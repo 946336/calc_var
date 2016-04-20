@@ -328,7 +328,6 @@ Value AST_eval(AST_Node root)
     } else {
         return Value_copy(root->v);
     }
-
 }
 
 AST_Node AST_rightmost(AST_Node root)
