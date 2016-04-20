@@ -16,6 +16,8 @@ You may or may not care about the following decisions I have made:
   </li>
 </ul>
 
+
+## Compiling
 Use either the included makefile or `compile.sh` to compile. Note that `compile.sh` aggregates all the source files into a single source file before compiling from that. `compile.sh` currently still requires that the headers be available during compilation.
 
 ## Syntax
