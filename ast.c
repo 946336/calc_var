@@ -143,7 +143,6 @@ void AST_print_r(AST_Node root)
             fputc('\"', stdout);
             print_string(root->v.u.s, stdout);
             fputc('\"', stdout);
-            fputc('\n', stdout);
             break;
         case BOOL:
             fprintf(stdout, "%s ", root->v.u.b ? "<True>" : "<False>");
@@ -194,7 +193,6 @@ void AST_print_verbose_r_(AST_Node root)
             fputc('\"', stdout);
             print_string(root->v.u.s, stdout);
             fputc('\"', stdout);
-            fputc('\n', stdout);
             break;
         case BOOL:
             fprintf(stdout, "%s", root->v.u.b ? "<True>" : "<False>");

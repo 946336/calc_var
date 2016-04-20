@@ -55,6 +55,7 @@ bool is_literal_type(Type t)
 
 static double do_math(double lhs, OPERATOR op, double rhs);
 static bool   relate(double lhs, RELOP op, double rhs);
+static bool   cmp_strings(char *lhs, RELOP op, char *rhs);
 
 /****************************************************************************/
 
@@ -150,7 +151,7 @@ Value Value_relate(Value lhs, RELOP op, Value rhs)
 
     switch (rhs.type) {
         case NUMBER: return Value_new_bool(relate(lhs.u.d, op, rhs.u.d));
-        case STRING: return Value_new_bool(strcmp(lhs.u.s, rhs.u.s) == 0);
+        case STRING: return Value_new_bool(cmp_strings(lhs.u.s, op, rhs.u.s));
         default: return NOTHING;
     }
 }
@@ -199,5 +200,24 @@ bool relate(double lhs, RELOP op, double rhs)
         case GREATER_THAN_OR_EQUAL: return lhs >= rhs;
     }
     // Compiler dummy
+    return false;
+}
+
+bool cmp_strings(char *lhs, RELOP op, char *rhs)
+{
+    switch (op) {
+        case EQUAL:
+            return (strcmp(lhs, rhs) == 0); break;
+        case NOT_EQUAL:
+            return (strcmp(lhs, rhs) != 0); break;
+        case LESS_THAN:
+            return (strcmp(lhs, rhs) < 0); break;
+        case LESS_THAN_OR_EQUAL:
+            return (strcmp(lhs, rhs) <= 0); break;
+        case GREATER_THAN:
+            return (strcmp(lhs, rhs) > 0); break;
+        case GREATER_THAN_OR_EQUAL:
+            return (strcmp(lhs, rhs) >= 0); break;
+    }
     return false;
 }
