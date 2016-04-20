@@ -75,7 +75,8 @@ AST_Node AST_insert(Value v, AST_Node root)
         case OP:
             if (v.u.op == PAREN) return AST_insertleaf(new_n, root);
             else return AST_insertoperator(new_n, root);
-        case NONE: return root;
+        case NONE:
+        case INVALID: return root;
     }
 
     // Compiler dummy
@@ -131,7 +132,8 @@ void AST_print_r(AST_Node root)
     AST_print_r(root->left);
 
     switch (root->v.type) {
-        case NONE: return;
+        case NONE:      return;
+        case INVALID:   return;
         case NUMBER:
             fprintf(stdout, "%.15g ", root->v.u.d);
             break;
@@ -172,7 +174,8 @@ void AST_print_verbose_r_(AST_Node root)
 
     AST_print_verbose_r_(root->left);
     switch (root->v.type) {
-        case NONE: return;
+        case NONE:      return;
+        case INVALID:   return;
         case NUMBER:
             fprintf(stdout, "%.15g", root->v.u.d);
             break;
@@ -220,7 +223,8 @@ bool AST_validate(AST_Node root)
     if (root == NULL) return false;
 
     switch (root->v.type) {
-        case NONE: return false;
+        case NONE:      return false;
+        case INVALID:   return false;
         case VAR:
             fprintf(stderr, "%s [Line %d]: Runtime error: Name [%s] not "
                             "bound\n", FILENAME, LINE_NUMBER,
@@ -263,6 +267,7 @@ Type AST_typeof(AST_Node root, Env e, bool show_errors)
 
     switch (root->v.type) {
         case NONE:
+        case INVALID:
             return root->v.type;
         case VAR:
             lhs = Env_find(e, root->v.u.name);
