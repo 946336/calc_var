@@ -75,15 +75,19 @@ Env Env_bind(Env e, char *name, Value val)
     Binding tmp;
 
     switch (val.type) {
+        case INVALID:
         case NONE: return e;
         case NUMBER:
+        case BOOL:
         case STRING:
             tmp  = Binding_new(name, val);
             e->bindings = Binding_prepend(tmp, e->bindings);
             break;
-        default:
+        case VAR:
             return Env_bind(e, val.u.name, Value_copy(Env_find(e, val.u.name)));
-            // fprintf(stderr, "Value type not supported\n");
+        case OP:
+        case RELAT_OP:
+            fprintf(stderr, "Attempted to bind operator\n");
     }
     return e;
 }

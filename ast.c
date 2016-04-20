@@ -70,8 +70,10 @@ AST_Node AST_insert(Value v, AST_Node root)
 
     switch (v.type) {
         case VAR:
+        case BOOL:
         case STRING:
         case NUMBER: return AST_insertleaf(new_n, root);
+        case RELAT_OP:
         case OP:
             if (v.u.op == PAREN) return AST_insertleaf(new_n, root);
             else return AST_insertoperator(new_n, root);
@@ -143,6 +145,12 @@ void AST_print_r(AST_Node root)
             fputc('\"', stdout);
             fputc('\n', stdout);
             break;
+        case BOOL:
+            fprintf(stdout, "%s ", root->v.u.b ? "<True>" : "<False>");
+            break;
+        case RELAT_OP:
+            fprintf(stdout, "%s ", RELOPtostring(root->v.u.rop));
+            break;
         case OP:
             if (root->v.u.op != PAREN) {
                 fprintf(stdout, "%c ", OPERATORtochar(root->v.u.op));
@@ -187,6 +195,12 @@ void AST_print_verbose_r_(AST_Node root)
             print_string(root->v.u.s, stdout);
             fputc('\"', stdout);
             fputc('\n', stdout);
+            break;
+        case BOOL:
+            fprintf(stdout, "%s", root->v.u.b ? "<True>" : "<False>");
+            break;
+        case RELAT_OP:
+            fprintf(stdout, " %s ", RELOPtostring(root->v.u.rop));
             break;
         case OP:
             if (root->v.u.op != PAREN) {
@@ -236,10 +250,14 @@ bool AST_validate(AST_Node root)
                             "bound\n", FILENAME, LINE_NUMBER,
                             root->v.u.name);
             return true;
+        case BOOL:
+            return (root->left == NULL) && (root->right == NULL);            
         case NUMBER:
             return (root->left == NULL) && (root->right == NULL);            
         case STRING:
             return (root->left == NULL) && (root->right == NULL);            
+        case RELAT_OP:
+            return AST_validate(root->left) && AST_validate(root->right);
         case OP:
             if (root->v.u.op != PAREN) {
                 if ((root->left == NULL) || (root->right == NULL)) {
@@ -279,12 +297,25 @@ Type AST_typeof(AST_Node root, Env e, bool show_errors)
             lhs = Env_find(e, root->v.u.name);
             return ((root->left != NULL) || (root->right != NULL)) ?
                 INVALID : lhs.type;
-        case NUMBER: 
+        case NUMBER:
+        case BOOL:
         case STRING:
             if ((root->left != NULL) || (root->right != NULL)) {
                 return INVALID;
-            }
+            } else return root->v.type;
             break;
+        case RELAT_OP:
+            lhs.type = AST_typeof(root->left, e, show_errors);
+            rhs.type = AST_typeof(root->right, e, show_errors);
+            if (lhs.type != rhs.type) {
+                fprintf(stderr, "%s [Line %d]: Type mismatch: Relational "
+                                "operator [%s] cannot operate on arguments "
+                                "of type [%s] and [%s]\n", FILENAME,
+                                LINE_NUMBER, RELOPtostring(root->v.u.rop),
+                                typestring(lhs.type), typestring(rhs.type));
+                return INVALID;
+            } else return ((rhs.type == NUMBER) || (rhs.type == STRING)) ?
+                            BOOL : INVALID;
         case OP:
             if (root->v.u.op != PAREN) {
                 lhs.type = AST_typeof(root->left, e, show_errors);
@@ -331,6 +362,13 @@ Value AST_eval(AST_Node root)
         } else {
             return AST_eval(root->right);
         }
+    } if (root->v.type == RELAT_OP) {
+        vl = AST_eval(root->left);
+        vr = AST_eval(root->right);
+        result = Value_relate(vl, root->v.u.rop, vr);
+        Value_free(&vl);
+        Value_free(&vr);
+        return result;
     } else {
         return Value_copy(root->v);
     }
@@ -355,6 +393,9 @@ bool bindsTighterThan(AST_Node lhs, AST_Node rhs)
 
     if (lhs->v.type == STRING) return true;
     if (rhs->v.type == STRING) return false;
+
+    if (lhs->v.type == RELAT_OP) return false;
+    if (rhs->v.type == RELAT_OP) return true;
 
     return hasHigherPriorityThan(lhs->v.u.op, rhs->v.u.op);
 }

@@ -1,0 +1,14 @@
+#ifndef CALC_RELATIONAL_OPERATOR_H
+#define CALC_RELATIONAL_OPERATOR_H 
+
+typedef enum RELOP
+{
+    EQUAL = 0, NOT_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN,
+    GREATER_THAN_OR_EQUAL
+} RELOP;
+
+const char *RELOPtostring(RELOP r);
+RELOP stringtoRELOP(char *str);
+
+#endif
+

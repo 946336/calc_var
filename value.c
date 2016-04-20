@@ -4,7 +4,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 #include <math.h>
+#include <string.h>
 
 /****************************************************************************/
 
@@ -13,25 +15,46 @@ static const char *NONE_S =  "NONE";
 static const char *NUMBER_S = "NUMBER";
 static const char *STRING_S = "STRING";
 static const char *VAR_S = "VARIABLE";
+static const char *BOOL_S = "BOOLEAN";
 static const char *OP_S = "OPERATOR";
+static const char *RELAT_OP_S = "RELATIONAL_OPERATOR";
 
 const char *typestring(Type t)
 {
     switch (t) {
-        case NONE:       return NONE_S;
-        case INVALID:    return INVALID_S;
-        case NUMBER:     return NUMBER_S;
-        case STRING:     return STRING_S;
-        case VAR:        return VAR_S;
-        case OP:         return OP_S;
+        case NONE:      return NONE_S;
+        case INVALID:   return INVALID_S;
+        case NUMBER:    return NUMBER_S;
+        case STRING:    return STRING_S;
+        case VAR:       return VAR_S;
+        case BOOL:      return BOOL_S;
+        case OP:        return OP_S;
+        case RELAT_OP:  return RELAT_OP_S;
     }
     // Compiler dummy
     return NONE_S;
 }
 
+bool is_literal_type(Type t)
+{
+    switch (t) {
+        case NONE:      return false;
+        case INVALID:   return false;
+        case NUMBER:    return true;
+        case STRING:    return true;
+        case VAR:       return true;
+        case BOOL:      return true;
+        case OP:        return false;
+        case RELAT_OP:  return false;
+    }
+    // Compiler dummy
+    return false;
+}
+
 /****************************************************************************/
 
 static double do_math(double lhs, OPERATOR op, double rhs);
+static bool   relate(double lhs, RELOP op, double rhs);
 
 /****************************************************************************/
 
@@ -61,6 +84,18 @@ Value Value_new_var(char *name)
     return v;
 }
 
+Value Value_new_bool(bool b)
+{
+    Value v = {BOOL, {.b = b}};
+    return v;
+}
+
+Value Value_new_relop(RELOP r)
+{
+    Value v = {RELAT_OP, {.rop = r}};
+    return v;
+}
+
 Value Value_copy(Value v)
 {
     Value n = v;
@@ -83,8 +118,11 @@ void Value_free(Value *v)
         case STRING:    free(v->u.s); break;
         case VAR:       free(v->u.name); break;
         case OP:
+        case RELAT_OP:
         case NUMBER:
-        default:        return;
+        case BOOL:
+        case INVALID:
+        case NONE:        return;
     }
 }
 
@@ -106,13 +144,27 @@ Value Value_combine(Value lhs, OPERATOR op, Value rhs)
     }
 }
 
+Value Value_relate(Value lhs, RELOP op, Value rhs)
+{
+    if (lhs.type != rhs.type) return NOTHING;
+
+    switch (rhs.type) {
+        case NUMBER: return Value_new_bool(relate(lhs.u.d, op, rhs.u.d));
+        case STRING: return Value_new_bool(strcmp(lhs.u.s, rhs.u.s) == 0);
+        default: return NOTHING;
+    }
+}
+
 void Value_print(Value v)
 {
     switch (v.type) {
         case NUMBER:    fprintf(stdout, "[%g]", v.u.d); break;
         case STRING:    fprintf(stdout, "[%s]", v.u.s); break;
         case VAR:       fprintf(stdout, "[%s]", v.u.name); break;
+        case BOOL:      fprintf(stdout, "[%s]", v.u.name ? "true" : "false");
+                            break;
         case OP:        fprintf(stdout, "[%c]", OPERATORtochar(v.u.op)); break;
+        case RELAT_OP:  fprintf(stdout, "[%s]", RELOPtostring(v.u.rop)); break;
         case NONE:      fprintf(stdout, "[%s]", NONE_S);
         case INVALID:   fprintf(stdout, "[%s]", INVALID_S);
     }
@@ -136,3 +188,16 @@ double do_math(double lhs, OPERATOR op, double rhs)
     return 0;
 }
 
+bool relate(double lhs, RELOP op, double rhs)
+{
+    switch (op) {
+        case EQUAL: return lhs == rhs;
+        case NOT_EQUAL: return lhs != rhs;
+        case LESS_THAN: return lhs < rhs;
+        case GREATER_THAN: return lhs > rhs;
+        case LESS_THAN_OR_EQUAL: return lhs <= rhs;
+        case GREATER_THAN_OR_EQUAL: return lhs >= rhs;
+    }
+    // Compiler dummy
+    return false;
+}

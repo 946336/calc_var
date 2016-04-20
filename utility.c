@@ -243,6 +243,26 @@ bool isNumber(char *token)
     return *end == '\0';
 }
 
+char *isRelOp(char *str)
+{
+    if (str == NULL) return NULL;
+
+    for (unsigned int i = 0; i < NUM_RELOPS; ++i) {
+        if (strcmp(RELOPS[i], str) == 0) return str;
+    }
+    return NULL;
+}
+
+char *hasRelOp(char *str)
+{
+    if (str == NULL) return NULL;
+
+    for (unsigned int i = 0; i < NUM_RELOPS; ++i) {
+        if (leads_with(RELOPS[i], str)) return str;
+    }
+    return NULL;
+}
+
 /* Expanding tabs is controlled by the MY_GETLINE_TABWIDTH define */
 /* If MY_GETLINE_TABWIDTH is defined, my_getline() will replace   */
 /* \t with however many spaces MY_GETLINE_TABWIDTH evaluates to   */

@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 
-static const char DELIMS[] = " =\"";
+static const char DELIMS[] = " =\"!<>";
 static const char ASSIGN = '=';
 static const char QUOTE = '"';
 static const char ESCAPE = '\\';
@@ -29,6 +29,21 @@ static const char *NONLEADING_KEYWORDS[] =
 
 static unsigned int NUM_NONLEADING_KEYWORDS = 
     (sizeof(NONLEADING_KEYWORDS) / sizeof(char *));
+
+static const char NOT[] = "!";
+static const char IS_EQUAL[] = "=";
+static const char IS_NOT_EQUAL[] = "!=";
+static const char IS_LESS_THAN[] = "<";
+static const char IS_GREATER_THAN[] = ">";
+static const char IS_LESS_THAN_OR_EQUAL[] = "<=";
+static const char IS_GREATER_THAN_OR_EQUAL[] = ">=";
+
+static const char *RELOPS[] = 
+{
+    NOT, IS_EQUAL, IS_NOT_EQUAL, IS_LESS_THAN, IS_GREATER_THAN,
+    IS_LESS_THAN_OR_EQUAL, IS_GREATER_THAN_OR_EQUAL
+};
+static const unsigned int NUM_RELOPS = sizeof(RELOPS) / sizeof(char*);
 
 char *next_token(char **str);
 

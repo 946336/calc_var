@@ -95,13 +95,17 @@ int main(int argc, char **argv)
         }
     
         Type t = AST_typeof(root, e, (verbosity == QUIET) ? false : true);
+
+
         if ((t != NONE) && (t != INVALID)) {
             if ((echo == YES) &&(verbosity == NORMAL)) {
-                if (root->v.type == OP) AST_print(root);
+                if ((root->v.type == OP) || (root->v.type == RELAT_OP))
+                    AST_print(root);
             } else if ((echo == YES) &&(verbosity == VERBOSE)) {
-                if (root->v.type == OP) AST_print_verbose(root);
+                if ((root->v.type == OP) || (root->v.type == RELAT_OP))
+                    AST_print_verbose(root);
             }
-    
+
             Value result = AST_eval(root);
             switch (result.type) {
                 case NUMBER:
@@ -113,11 +117,19 @@ int main(int argc, char **argv)
                     fputc('\"', stdout);
                     fputc('\n', stdout);
                     break;
-                default:
+                case BOOL:
+                    fprintf(stdout, "= %s\n", result.u.b ?
+                                              "<True>" : "<False>");
                     break;
+                case NONE:
+                case INVALID:
+                case VAR:
+                case OP:
+                case RELAT_OP:
                     fprintf(stderr, "%s [Line %d]: %s\n", FILENAME, LINE_NUMBER,
                                     "Argh! You've found an interpreter "
                                     "bug: Impossible value");
+                    break;
             }
             Value_free(&result);
         } else if (t == INVALID) {

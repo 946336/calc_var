@@ -3,6 +3,7 @@
 #include "value.h"
 
 #include <math.h>
+#include <stdbool.h>
 
 /****************************************************************************/
 
@@ -20,6 +21,9 @@ Env add_basis(Env e)
     e = Env_bind(e, "PI",  Value_new_number(PI));
     e = Env_bind(e, "E",   Value_new_number(EULER_N));
     e = Env_bind(e, "PHI", Value_new_number(phi));
+
+    e = Env_bind(e, "True",  Value_new_bool(true));
+    e = Env_bind(e, "False", Value_new_bool(false));
 
     return e;
 }

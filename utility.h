@@ -33,9 +33,12 @@ char *find_next_word(char *str, word_condition predicate, const char *target);
 bool leads_with(const char *first, const char *second);
 
 char *isKeyword(char *token);
+char *hasKeyword(char *token);
 char *isLeadingKeyword(char *token);
 char *isNonLeadingKeyword(char *token);
 bool  isNumber(char *token);
+char *isRelOp(char *str);
+char *hasRelOp(char *str);
 
 /* Expanding tabs is controlled by the MY_GETLINE_TABWIDTH define */
 /* If MY_GETLINE_TABWIDTH is defined, my_getline() will replace   */

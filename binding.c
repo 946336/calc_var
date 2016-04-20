@@ -61,7 +61,18 @@ void Binding_print(Binding b)
         case STRING:
             fprintf(stdout, "[%s] --> [%s]\n", b->name, b->value.u.s);
             break;
-        default: break;
+        case BOOL:
+            fprintf(stdout, "[%s] --> [%s]\n", b->name,
+                            b->value.u.b ? "<True>" : "<False>");
+            break;
+        case VAR:
+            fprintf(stdout, "[%s] --> [%s]\n", b->name, b->value.u.name);
+            break;
+        case NONE:
+        case INVALID:
+        case OP:
+        case RELAT_OP:
+            break;
     }
     Binding_print(b->rest);
 }

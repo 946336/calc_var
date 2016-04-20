@@ -14,7 +14,6 @@ typedef enum OPERATOR { LITERAL = 0,
                     PROD, QUOT,
                     SUM, DIFF
                   } OPERATOR;
-
 static const char operators[] = "()^|%\\*/+-";
 
 /****************************************************************************/

@@ -178,6 +178,18 @@ SubExp expression(char **line, char *token)
             l = SubExp_add(l, string(line, token));
             // if (**line == QUOTE) fprintf(stdout, "Ending string literal\n");
             // else fprintf(stdout, "Ended on [%s]\n", *line);
+        } else if (isRelOp(token)) {
+            if ((*token != *IS_EQUAL) && (*IS_EQUAL == **line)) {
+                // fprintf(stdout, "Detected compositional relop: [%s=]\n", token);
+                (*line)++;
+                RELOP rop;
+                if (*token == '!') rop = NOT_EQUAL;
+                else rop = stringtoRELOP(token);
+                l = SubExp_add(l, Value_new_relop(rop + 1));
+            } else {
+                // fprintf(stdout, "Detected relop: [%s]\n", token);
+                l = SubExp_add(l, Value_new_relop(stringtoRELOP(token)));
+            }
         } else {
             if ((last != NULL) && (*last == RPAREN)) {
                 l = SubExp_add(l, Value_new_op(PROD)); 
