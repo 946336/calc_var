@@ -73,10 +73,11 @@ AST_Node AST_insert(Value v, AST_Node root)
         case BOOL:
         case STRING:
         case NUMBER: return AST_insertleaf(new_n, root);
-        case RELAT_OP:
         case OP:
             if (v.u.op == PAREN) return AST_insertleaf(new_n, root);
             else return AST_insertoperator(new_n, root);
+        case RELAT_OP:
+            return AST_insertoperator(new_n, root);
         case NONE:
         case INVALID: return root;
     }
@@ -360,7 +361,7 @@ Value AST_eval(AST_Node root)
         } else {
             return AST_eval(root->right);
         }
-    } if (root->v.type == RELAT_OP) {
+    } else if (root->v.type == RELAT_OP) {
         vl = AST_eval(root->left);
         vr = AST_eval(root->right);
         result = Value_relate(vl, root->v.u.rop, vr);

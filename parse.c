@@ -183,7 +183,7 @@ SubExp expression(char **line, char *token)
                 // fprintf(stdout, "Detected compositional relop: [%s=]\n", token);
                 (*line)++;
                 RELOP rop;
-                if (*token == '!') rop = NOT_EQUAL;
+                if (*token == '!') rop = EQUAL;
                 else rop = stringtoRELOP(token);
                 l = SubExp_add(l, Value_new_relop(rop + 1));
             } else {

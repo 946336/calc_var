@@ -95,8 +95,6 @@ int main(int argc, char **argv)
         }
     
         Type t = AST_typeof(root, e, (verbosity == QUIET) ? false : true);
-
-
         if ((t != NONE) && (t != INVALID)) {
             if ((echo == YES) &&(verbosity == NORMAL)) {
                 if ((root->v.type == OP) || (root->v.type == RELAT_OP))
