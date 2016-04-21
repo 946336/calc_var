@@ -31,6 +31,45 @@ Any complete mathematical expression
     = 58
     >>> 2+(3+5)8|2
     = 26
+    >>> 3 = 6
+    = <False>
+    >>> 3 <= 3
+    = <True>
+    >>> 3 != (2*3)
+    - <True>
+
+### Operators / Relational Operators
+The operators are:
+
+`+`: Add
+
+`-`: Subtract
+
+`*`: Multiply
+
+`/`: Divide
+
+`^`: Raise to power
+
+`|`: Take logarithm
+
+`%`: Modulus
+
+`\`: Divide (truncate to integer)
+
+The relational operators are:
+
+`=`: Equal to
+
+`!=`: Not equal to
+
+`<`: Less than
+
+`<=`: Less than or equal
+
+`>`: Greater than
+
+`>=`: Greater than or equal
 
 ### Variables
 Variables declared in the following fashion:
@@ -77,6 +116,11 @@ String concatenation is accomplished via the `+` operator.
 
     >>> let a = b + c where b = "Hello " and c = "world"
     = "Hello world"
+
+The relational operators `=`, `!=`, `<`, `<=`, `>`, and `>=` are defined lexicographically for strings.
+
+### Booleans
+Boolean values exist as well. Relational operators have been defined on them, but not arithmetic operators.
 
 ## Command Line
 ### Options
