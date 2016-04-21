@@ -201,6 +201,13 @@ SubExp expression(char **line, char *token)
     } while (((token = next_token(line)) != NULL) && 
              (isNonLeadingKeyword(token) == NULL));
 
+    if (!SubExp_is_singleton(l)) {
+        SubExp_free(&l);
+        l = SubExp_new();
+        fprintf(stderr, "%s [Line %d]: Parsing error: Unclosed parentheses\n",
+                        FILENAME, LINE_NUMBER);
+    }
+
     // Hacky and bad
     char *keyword = isNonLeadingKeyword(token);
     if (keyword != NULL) {
