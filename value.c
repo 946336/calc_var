@@ -56,6 +56,7 @@ bool is_literal_type(Type t)
 static double do_math(double lhs, OPERATOR op, double rhs);
 static bool   relate(double lhs, RELOP op, double rhs);
 static bool   cmp_strings(char *lhs, RELOP op, char *rhs);
+static bool   combine_bool(bool lhs, RELOP op, bool rhs);
 
 /****************************************************************************/
 
@@ -152,6 +153,7 @@ Value Value_relate(Value lhs, RELOP op, Value rhs)
     switch (rhs.type) {
         case NUMBER: return Value_new_bool(relate(lhs.u.d, op, rhs.u.d));
         case STRING: return Value_new_bool(cmp_strings(lhs.u.s, op, rhs.u.s));
+        case BOOL:   return Value_new_bool(combine_bool(lhs.u.b, op, rhs.u.b));
         default: return NOTHING;
     }
 }
@@ -219,5 +221,19 @@ bool cmp_strings(char *lhs, RELOP op, char *rhs)
         case GREATER_THAN_OR_EQUAL:
             return (strcmp(lhs, rhs) >= 0); break;
     }
+    return false;
+}
+
+bool combine_bool(bool lhs, RELOP op, bool rhs)
+{
+    switch (op) {
+        case EQUAL: return lhs == rhs;
+        case NOT_EQUAL: return lhs != rhs;
+        case LESS_THAN: return lhs < rhs;
+        case GREATER_THAN: return lhs > rhs;
+        case LESS_THAN_OR_EQUAL: return lhs <= rhs;
+        case GREATER_THAN_OR_EQUAL: return lhs >= rhs;
+    }
+    // Compiler dummy
     return false;
 }

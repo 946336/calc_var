@@ -313,7 +313,8 @@ Type AST_typeof(AST_Node root, Env e, bool show_errors)
                                 LINE_NUMBER, RELOPtostring(root->v.u.rop),
                                 typestring(lhs.type), typestring(rhs.type));
                 return INVALID;
-            } else return ((rhs.type == NUMBER) || (rhs.type == STRING)) ?
+            } else return ((rhs.type == NUMBER) || (rhs.type == STRING)
+                            || (rhs.type == BOOL)) ?
                             BOOL : INVALID;
         case OP:
             if (root->v.u.op != PAREN) {
