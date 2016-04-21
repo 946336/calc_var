@@ -164,7 +164,7 @@ SubExp expression(char **line, char *token)
             if ((*token == LPAREN)) {
                 if ((last != NULL) && ((*last == RPAREN) || isNumber(last) ||
                         (!isOperator(last) && !isNumber(last) &&
-                         !isKeyword(last)))) {
+                         !isKeyword(last) && !isRelOp(last)))) {
                     l = SubExp_add(l, Value_new_op(PROD));
                 }
                 l = SubExp_add(l, Value_new_op(chartoOPERATOR(*token)));
