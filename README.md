@@ -84,7 +84,7 @@ The variable `<Name_1>` is assigned the result of evaluating `<Expression_1>` an
 
 Intermediate variables can be introduced in the scope of another expression. These variables are destroyed after `<Exp_1>` is evaluated. You can introduce multiple intermediate variables at once.
 
-Intermediate variables are be mutually recursive (Note: super extensive testing has not been done on this front), so the following examples are correct and equivalent. After either or both of these statements, `a` is correctly bound to the value `5`, and neither `b` nor `c` are bound as variables.
+Intermediate variables are mutually recursive (Note: super extensive testing has not been done on this front), so the following examples are correct and equivalent. After either or both of these statements, `a` is correctly bound to the value `5`, and neither `b` nor `c` are bound as variables.
 
     >>> let a = b + 0 where b = c and c = 5
     = 5
@@ -105,7 +105,7 @@ Similarly, intermediate bindings in the scope of an expression do not persist.
     ... [...] Runtime Error: Name [b] not bound
 
 ### Strings
-Strings exist and can be bound to variables. String literals are quoted with double quotes as in 
+Strings exist and can be bound to variables. String literals are quoted with double quotes as in
 
     >>> "This is a string literal"
     = "This is a string literal"
